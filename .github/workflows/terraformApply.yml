@@ -59,3 +59,16 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_EC2_METADATA_DISABLED: "true" 
         run: terraform apply -var="TAGS=${{ secrets.TAGS }}" -var="NOME=${{ secrets.NOMEPROJETO }}" -auto-approve
+
+      - name: Capture RDS Endpoint
+        run: echo "CLUSTER_NAME=$(terraform output -raw clusterName | awk 'NR==1')" >> $GITHUB_ENV
+
+      - name: Install GitHub CLI
+        run: sudo apt install gh -y
+
+      - name: Authenticate GitHub CLI
+        run: echo ${{ secrets.GH_PAT }} | gh auth login --with-token
+      
+      - name: Save as Repository Secret
+        run: |
+          gh secret set CLUSTER_NAME --body "$CLUSTER_NAME" --org Outrora

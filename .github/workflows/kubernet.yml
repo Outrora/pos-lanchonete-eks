@@ -1,0 +1,53 @@
+name: Kubectl apply
+on: 
+  workflow_run: 
+    workflows: [Terraform Apply]
+    types:
+      - completed
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ID }}
+            aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+            aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Kubeconfig
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Update Kube Config
+        run: |
+            aws eks update-kubeconfig \
+            --name ${{ secrets.CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+  
+
+      - name: Create or Update Secret
+        run: |
+          kubectl create secret generic db-secret \
+            --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --from-literal=POSTGRES_URL=${{ secrets.RDS_ENDPOINT }} \
+            --from-literal=POSTGRES_USER=${{ secrets.DB_USER }} \
+            --namespace=default \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+ 
+
+      - name: Apply Deployment
+        run: |
+          kubectl apply -f k8s/
