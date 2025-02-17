@@ -3,4 +3,8 @@ resource "aws_eks_access_entry" "eks-access-entry" {
   principal_arn     = var.principalArn
   kubernetes_groups = ["fiap"]
   type              = "STANDARD"
+
+  tags = {
+    projeto = var.TAGS
+  }
 }
