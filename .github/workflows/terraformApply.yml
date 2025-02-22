@@ -69,11 +69,12 @@ jobs:
         run: terraform output
       
       - name: Capture Cluster_Name
-        run: echo "CLUSTER_NAME=$(terraform output -raw clusterName)" >> $GITHUB_ENV
+        run: |
+          echo "CLUSTER_NAME=$(terraform output -raw clusterName)" >> $GITHUB_ENV
       
       - name: Debug Cluster Name
         run: |
-            echo "Cluster Name: $CLUSTER_NAME"
+          echo "Cluster Name: $CLUSTER_NAME"
 
       - name: Install GitHub CLI
         run: sudo apt install gh -y
@@ -82,5 +83,6 @@ jobs:
         run: echo ${{ secrets.GH_PAT }} | gh auth login --with-token
       
       - name: Save as Repository Secret
-        run: |
+        run: gh secret set CLUSTER_NAME --body "$CLUSTER_NAME" --org Outrora
+
     
