@@ -24,18 +24,15 @@ jobs:
             aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
             aws-region: ${{ env.AWS_REGION }}
 
-      - name: Set up Kubeconfig
-        uses: azure/k8s-set-context@v1
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }}
-
       - name: Update Kube Config
         run: |
             aws eks update-kubeconfig \
             --name ${{ secrets.CLUSTER_NAME }} \
             --region ${{ env.AWS_REGION }}
   
+      - name: Verify Cluster Connectivity
+        run: |
+              kubectl get nodes
 
       - name: Create or Update Secret
         run: |
@@ -46,8 +43,10 @@ jobs:
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
 
- 
-
       - name: Apply Deployment
         run: |
-          kubectl apply -f k8s/
+          kubectl apply -f k8s/ --save-config
+
+      - name: Verify Deployment
+        run: |
+          kubectl get pods --namespace=default
