@@ -60,8 +60,15 @@ jobs:
           AWS_EC2_METADATA_DISABLED: "true" 
         run: terraform apply -var="TAGS=${{ secrets.TAGS }}" -var="NOME=${{ secrets.NOMEPROJETO }}" -auto-approve
 
-      - name: Capture RDS Endpoint
-        run: echo "CLUSTER_NAME=$(terraform output -raw clusterName | awk 'NR==1')" >> $GITHUB_ENV
+      - name: List Terraform Outputs
+        run: terraform output
+      
+      - name: Capture Cluster_Name
+        run: echo "CLUSTER_NAME=$(terraform output -raw clusterName)" >> $GITHUB_ENV
+      
+      - name: Debug Cluster Name
+        run: |
+            echo "Cluster Name: $CLUSTER_NAME"
 
       - name: Install GitHub CLI
         run: sudo apt install gh -y

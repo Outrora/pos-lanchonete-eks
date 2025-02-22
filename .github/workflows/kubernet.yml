@@ -24,6 +24,10 @@ jobs:
             aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
             aws-region: ${{ env.AWS_REGION }}
 
+      - name: Debug Cluster Name
+        run: |
+           echo "Cluster Name: ${{ secrets.CLUSTER_NAME }}"
+
       - name: Update Kube Config
         run: |
             aws eks update-kubeconfig \
