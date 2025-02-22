@@ -70,8 +70,8 @@ jobs:
       
       - name: Capture Cluster_Name
         run: |
-          "CLUSTER_NAME=$(terraform output -raw clusterName | tr -d '\n' | tr -d '\r')
-          echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV 
+          CLUSTER_NAME=$(terraform output -raw clusterName | tr -d '\n' | tr -d '\r')
+          echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
       
       - name: Debug Cluster Name
         run: |
