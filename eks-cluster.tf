@@ -1,5 +1,5 @@
 resource "aws_eks_cluster" "eks-cluster" {
-  name     = var.projectName
+  name     = "${var.NOME}-EKS"
   version  = "1.32"
   role_arn = data.aws_iam_role.labrole.arn
 

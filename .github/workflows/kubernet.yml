@@ -7,6 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  CLUSTER: ${{ secrets.NOMEPROJETO }}-EKS
 
 jobs:
   
@@ -26,12 +27,12 @@ jobs:
 
       - name: Debug Cluster Name
         run: |
-           echo "Cluster Name: ${{ secrets.CLUSTER_NAME }}"
+           echo "Cluster Name: ${{ env.CLUSTER }}"
 
       - name: Update Kube Config
         run: |
             aws eks update-kubeconfig \
-            --name ${{ secrets.CLUSTER_NAME }} \
+            --name ${{ env.CLUSTER }} \
             --region ${{ env.AWS_REGION }}
   
       - name: Verify Cluster Connectivity
@@ -43,7 +44,7 @@ jobs:
           kubectl create secret generic db-secret \
             --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
             --from-literal=POSTGRES_URL=${{ secrets.RDS_ENDPOINT }} \
-            --from-literal=POSTGRES_USER=${{ secrets.DB_USER }} \
+            --from-literal=POSTGRES_USER=${{ env.CLUSTER }} \
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
 
