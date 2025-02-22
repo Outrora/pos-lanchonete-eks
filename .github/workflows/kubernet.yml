@@ -37,6 +37,7 @@ jobs:
   
       - name: Verify Cluster Connectivity
         run: |
+              kubectl config view
               kubectl get nodes
 
       - name: Create or Update Secret
