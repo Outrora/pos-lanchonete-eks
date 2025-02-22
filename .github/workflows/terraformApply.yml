@@ -75,13 +75,15 @@ jobs:
               AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
               AWS_EC2_METADATA_DISABLED: "true" 
         run: |
-          CLUSTER_NAME=$(terraform output -raw clusterName | awk 'NR==1')
+          # Captura o nome do cluster
+          CLUSTER_NAME=$(terraform output -raw clusterName | tr -d '\n' | tr -d '\r')
+            
+          # Debug: Exibe o valor de CLUSTER_NAME para verificação
+          echo "Cluster Name: $CLUSTER_NAME"
+            
+          # Exporta a variável para o ambiente do GitHub Actions
           echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
       
-      - name: Debug Cluster Name
-        run: |
-         echo "Cluster Name: $CLUSTER_NAME"
-
       - name: Install GitHub CLI
         run: sudo apt install gh -y
 
