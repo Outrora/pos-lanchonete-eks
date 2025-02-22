@@ -41,7 +41,7 @@ jobs:
           kubectl create secret generic db-secret \
             --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
             --from-literal=POSTGRES_URL=jdbc:postgresql://${{ secrets.RDS_ENDPOINT }}:5432/${{secrets.NOMEPROJETO}}-db \
-            --from-literal=POSTGRES_USER=${{ env.CLUSTER }} \
+            --from-literal=POSTGRES_USER=${{ secrets.DB_USER }} \
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
 
