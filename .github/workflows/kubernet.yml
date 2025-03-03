@@ -45,6 +45,13 @@ jobs:
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Create or Update Secret
+        run: |
+          kubectl create secret generic secret_jwt \
+            --from-literal=JWT=${{ secrets.SECRET_KEY }} \
+            --namespace=default \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Apply Deployment
         run: |
           kubectl apply -f k8s
