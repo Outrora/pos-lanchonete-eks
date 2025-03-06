@@ -1,0 +1,61 @@
+name: Kubectl apply
+on: 
+  workflow_run: 
+    workflows: [Terraform Apply]
+    types:
+      - completed
+
+env:
+  AWS_REGION: us-east-1
+  CLUSTER: ${{ secrets.NOMEPROJETO }}-EKS
+
+jobs:
+  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+            aws-region: ${{ env.AWS_REGION }}
+
+      - name: Debug Cluster Name
+        run: |
+           echo "Cluster Name: ${{ env.CLUSTER }}"
+
+      - name: Update Kube Config
+        run: |
+            aws eks update-kubeconfig \
+            --name ${{ env.CLUSTER }} \
+            --region ${{ env.AWS_REGION }}
+  
+
+      - name: Create or Update Secret Banco
+        run: |
+          kubectl create secret generic db-secret \
+            --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --from-literal=POSTGRES_URL=jdbc:postgresql://${{ secrets.RDS_ENDPOINT }}:5432/${{secrets.NOMEPROJETO}} \
+            --from-literal=POSTGRES_USER=${{ secrets.DB_USER }} \
+            --namespace=default \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create or Update Secret JWT
+        run: |
+          kubectl create secret generic secret_jwt \
+            --from-literal=JWT=${{ secrets.SECRET_KEY }} \
+            --namespace=default \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Apply Deployment
+        run: |
+          kubectl apply -f k8s
+
+      - name: Verify Deployment
+        run: |
+          kubectl get pods --namespace=default

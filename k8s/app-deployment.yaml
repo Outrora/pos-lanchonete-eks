@@ -22,6 +22,11 @@ spec:
           env:
             - name: DB_KIND
               value: "postgresql"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret_jwt
+                  key: JWT
             - name: POSTGRES_URL
               valueFrom:
                 secretKeyRef:

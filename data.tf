@@ -1,5 +1,8 @@
 data "aws_vpc" "vpc" {
-  cidr_block = "172.31.0.0/16"
+  filter {
+    name   = "tag:Name"
+    values = ["${var.NOME}-vpc"]  # Coloque aqui o nome exato da VPC
+  }
 }
 
 data "aws_subnets" "subnets"{
@@ -12,4 +15,12 @@ data "aws_subnets" "subnets"{
 data "aws_subnet" "subnet" {
   for_each = toset(data.aws_subnets.subnets.ids)
   id       = each.value
+}
+
+data "aws_iam_role" "labrole" {
+  name = "LabRole"
+}
+
+output "labrole_arn" {
+  value = data.aws_iam_role.labrole.arn
 }
