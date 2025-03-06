@@ -25,7 +25,7 @@ spec:
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: secret_jwt
+                  name: secret-jwt
                   key: JWT
             - name: POSTGRES_URL
               valueFrom:
