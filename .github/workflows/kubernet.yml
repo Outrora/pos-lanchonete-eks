@@ -36,7 +36,7 @@ jobs:
             --region ${{ env.AWS_REGION }}
   
 
-      - name: Create or Update Secret
+      - name: Create or Update Secret Banco
         run: |
           kubectl create secret generic db-secret \
             --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
@@ -45,7 +45,7 @@ jobs:
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Create or Update Secret
+      - name: Create or Update Secret JWT
         run: |
           kubectl create secret generic secret_jwt \
             --from-literal=JWT=${{ secrets.SECRET_KEY }} \
