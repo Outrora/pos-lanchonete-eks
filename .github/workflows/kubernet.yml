@@ -47,7 +47,7 @@ jobs:
 
       - name: Create or Update Secret JWT
         run: |
-          kubectl create secret generic secret_jwt \
+          kubectl create secret generic secret-jwt \
             --from-literal=JWT=${{ secrets.SECRET_KEY }} \
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
