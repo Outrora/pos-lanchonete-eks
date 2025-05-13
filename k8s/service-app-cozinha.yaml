@@ -7,6 +7,6 @@ spec:
     app: app-cozinha
   ports:
     - protocol: TCP
-      port: 9091
+      port: 80
       targetPort: 8080
   type: LoadBalancer

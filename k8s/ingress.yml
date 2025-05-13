@@ -1,0 +1,34 @@
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    kubernetes.io/ingress.class: alb
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /pedido
+            pathType: Prefix
+            backend:
+              service:
+                name: app-service-pedido
+                port:
+                  number: 80
+          - path: /cozinha
+            pathType: Prefix
+            backend:
+              service:
+                name: app-service-cozinha
+                port:
+                  number: 80
+          - path: /cliente
+            pathType: Prefix
+            backend:
+              service:
+                name: app-service-cliente
+                port:
+                  number: 80
