@@ -13,7 +13,7 @@ variable "instanceType" {
 }
 
 variable "principalArn" {
-  default = "arn:aws:iam::142712539440:role/voclabs"
+  default = "arn:aws:iam::028058510155:role/voclabs"
 }
 
 variable "policyArn" {
