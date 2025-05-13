@@ -1,25 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: appCozinha
   labels:
-    app: app
+    app: appCozinha
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app
+      app: appCozinha
   template:
     metadata:
       labels:
-        app: app
+        app: appCozinha
     spec:
       containers:
-        - name: app
-          image: mrpauloii/lanchonete_fiap:latest
+        - name: appCozinha
+          image: mrpauloii/micro_cozinha_lanchonete:latest
           ports:
             - containerPort: 8080
           env:
+            - name: KAFKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BROKER_URL
             - name: DB_KIND
               value: "postgresql"
             - name: SECRET_KEY
@@ -30,35 +35,18 @@ spec:
             - name: POSTGRES_URL
               valueFrom:
                 secretKeyRef:
-                  name: db-secret
+                  name: db-secret-cozinha
                   key: POSTGRES_URL
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: db-secret
+                  name: db-secret-cozinha
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-secret
+                  name: db-secret-cozinha 
                   key: POSTGRES_PASSWORD
-            - name: MERCADO_PAGO_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: mercado-pago-secret
-                  key: MERCADO_PAGO_TOKEN
-            - name: MERCADO_PAGO_POS_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mercado-pago-secret
-                  key: MERCADO_PAGO_POS_ID
-            - name: MERCADO_PAGO_USER_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mercado-pago-secret
-                  key: MERCADO_PAGO_USER_ID
-            - name: MERCADO_PAGO_MP_REST_URL
-              value: https://api.mercadopago.com
           resources:
             requests:
               memory: "256Mi"

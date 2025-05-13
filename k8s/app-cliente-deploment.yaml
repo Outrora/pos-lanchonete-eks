@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appCliente
+  labels:
+    app: appCliente
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appCliente
+  template:
+    metadata:
+      labels:
+        app: appCliente
+    spec:
+      containers:
+        - name: appCliente
+          image: mrpauloii/micro_cliente_lanchonete:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_KIND
+              value: "postgresql"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-jwt
+                  key: JWT
+            - name: POSTGRES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret-cliente
+                  key: POSTGRES_URL
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret-cliente
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret-cliente
+                  key: POSTGRES_PASSWORD
+            - name: KAFKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BROKER_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

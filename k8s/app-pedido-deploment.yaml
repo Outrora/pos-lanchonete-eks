@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appPedido
+  labels:
+    app: appPedido
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appPedido
+  template:
+    metadata:
+      labels:
+        app: appPedido
+    spec:
+      containers:
+        - name: appPedido
+          image: mrpauloii/micro_pedido_lanchonete:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE
+              value: "pedidos"
+            - name: URL_BANCO
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: URL
+            - name: KAFKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BROKER_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

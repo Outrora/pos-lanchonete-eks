@@ -36,14 +36,24 @@ jobs:
             --region ${{ env.AWS_REGION }}
   
 
-      - name: Create or Update Secret Banco
+      - name: Create or Update Secret Banco cozinha
         run: |
-          kubectl create secret generic db-secret \
+          kubectl create secret generic db-secret-cozinha \
             --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            --from-literal=POSTGRES_URL=jdbc:postgresql://${{ secrets.RDS_ENDPOINT }}:5432/${{secrets.NOMEPROJETO}} \
+            --from-literal=POSTGRES_URL=jdbc:postgresql://${{ secrets.RDS_COZINHA }}:5432/cozinha \
             --from-literal=POSTGRES_USER=${{ secrets.DB_USER }} \
             --namespace=default \
             --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create or Update Secret Banco Cliente
+        run: |
+          kubectl create secret generic db-secret-cliente \
+            --from-literal=POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --from-literal=POSTGRES_URL=jdbc:postgresql://${{ secrets.RDS_CLIENTE }}:5432/cliente \
+            --from-literal=POSTGRES_USER=${{ secrets.DB_USER }} \
+            --namespace=default \
+            --dry-run=client -o yaml | kubectl apply -f -
+
 
       - name: Create or Update Secret JWT
         run: |
