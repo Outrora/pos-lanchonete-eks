@@ -4,7 +4,7 @@ metadata:
   name: app-service-cliente
 spec:
   selector:
-    app: appCliente
+    app: app-cliente
   ports:
     - protocol: TCP
       port: 80

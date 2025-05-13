@@ -9,7 +9,7 @@ variable "accessConfig" {
 
 
 variable "instanceType" {
-  default = "t3.micro"
+  default = "t3.medium"
 }
 
 variable "principalArn" {

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appCozinha
+  name: app-cozinha
   labels:
-    app: appCozinha
+    app: app-cozinha
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: appCozinha
+      app: app-cozinha
   template:
     metadata:
       labels:
-        app: appCozinha
+        app: app-cozinha
     spec:
       containers:
-        - name: appCozinha
+        - name: app-cozinha
           image: mrpauloii/micro_cozinha_lanchonete:latest
           ports:
             - containerPort: 8080

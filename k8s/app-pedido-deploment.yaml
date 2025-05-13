@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appPedido
+  name: app-pedido
   labels:
-    app: appPedido
+    app: app-pedido
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: appPedido
+      app: app-pedido
   template:
     metadata:
       labels:
-        app: appPedido
+        app: app-pedido
     spec:
       containers:
-        - name: appPedido
+        - name: app-pedido
           image: mrpauloii/micro_pedido_lanchonete:latest
           ports:
             - containerPort: 8080
