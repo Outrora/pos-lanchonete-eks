@@ -4,7 +4,7 @@ metadata:
   name: app-service-cozinha
 spec:
   selector:
-    app: appCozinha
+    app: app-cozinha
   ports:
     - protocol: TCP
       port: 9091

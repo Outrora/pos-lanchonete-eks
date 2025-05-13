@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appCliente
+  name: app-cliente
   labels:
-    app: appCliente
+    app: app-cliente
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: appCliente
+      app: app-cliente
   template:
     metadata:
       labels:
-        app: appCliente
+        app: app-cliente
     spec:
       containers:
-        - name: appCliente
+        - name: app-cliente
           image: mrpauloii/micro_cliente_lanchonete:latest
           ports:
             - containerPort: 8080

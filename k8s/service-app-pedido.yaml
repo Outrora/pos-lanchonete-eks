@@ -4,7 +4,7 @@ metadata:
   name: app-service-pedido
 spec:
   selector:
-    app: appPedido
+    app: app-pedido
   ports:
     - protocol: TCP
       port: 9090
