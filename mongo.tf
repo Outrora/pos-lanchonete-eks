@@ -1,5 +1,5 @@
 resource "aws_security_group" "mongodb_atlas_sg" {
-  vpc_id = module.vpc.vpc_id
+  vpc_id      = data.aws_vpc.vpc.id
   name   = "${var.NOME}_mongodb_atlas_sg"
   description = "Security group for MongoDB Atlas connectivity"
 
